@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<strings>
+  <string id="30001">640x360 1200K</string>
+  <string id="30002">400x224 600K</string>
+  <string id="30003">HLS(m3u8) - Moble</string>
+  <string id="30004">HLS(m3u8)- Tablet</string>
+  <string id="30005">HLS(m3u8)- High</string>
+  <string id="30006">940x560 2400K</string>
+  <string id="30007">800x448 1800K</string>
+  <string id="30008">800x448 1200K</string>
+  <string id="30009">400x448 800K</string>
+  <string id="30010">400x224 500K</string>
+  <string id="30011"></string>
+  <string id="30012">HLS(m3u8) 720p</string>
+  <string id="30013"></string>
+</strings>
