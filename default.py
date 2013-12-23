@@ -36,7 +36,7 @@ def addon_log(string):
         log_message = string.encode('utf-8', 'ignore')
     except:
         log_message = 'addonException: addon_log: %s' %format_exc()
-    xbmc.log("[%s-%s]: %s" %(addon_id, addon_version, log_message), level=xbmc.LOGDEBUG)
+    xbmc.log("[%s-%s]: %s" %(addon_id, addon_version, log_message), level=xbmc.LOGNOTICE)
 
 
 def make_request(url, data=None, headers=None):
@@ -340,7 +340,7 @@ def do_login():
             addon_log('We did not recive the required cookies!')
 
 
-def resolve_prem_url(ids_dict):
+def resolve_prem_url(ids_dict, retry=False):
     SOAPCODES = {
         "1"    : "OK",
         "-1000": "Requested Media Not Found",
@@ -390,24 +390,31 @@ def resolve_prem_url(ids_dict):
     soup = BeautifulStoneSoup(data, convertEntities=BeautifulStoneSoup.XML_ENTITIES)
     status_code = soup('status-code')[0].string
     if status_code != "1":
+        addon_log('server returned unsuccessful status_code: %s' %status_code)
         try:
-            error_str = SOAPCODES[status_code]
-            addon_log('SOAPCODE : %s' %error_str)
+            addon_log('SOAPCODE : %s' %SOAPCODES[status_code])
         except:
             addon_log(format_exc())
             pass
-        try:
-            status_message = soup('status-message')[0].string
-            if status_message:
-                addon_log('Status Message: %s' %status_message)
-                notify(status_message)
+        # this usually is caused by invalid cookies
+        if not retry:
+            addon_log('clearing cookies')
+            cookie_jar.clear()
+            cookie_jar.save()
+            return resolve_prem_url(ids_dict, True)
+        else:
+            try:
+                status_message = soup('status-message')[0].string
+                if status_message:
+                    addon_log('Status Message: %s' %status_message)
+                    notify(status_message)
+                    return
+                else:
+                    raise
+            except:
+                addon_log(format_exc())
+                notify('Unknown Error - Check Log')
                 return
-            else:
-                raise
-        except:
-            addon_log(format_exc())
-            notify('Unknown Error - Check Log')
-            return
     try:
         event_id = soup('event-id')[0].string
     except:
