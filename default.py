@@ -73,58 +73,97 @@ def make_request(url, data=None, headers=None):
 
 
 def cache_shows():
-    url = 'http://www.video.theblaze.com/media/video.jsp'
-    data = make_request(url)
-    soup = BeautifulSoup(data, convertEntities=BeautifulSoup.HTML_ENTITIES)
-    items = soup.find('div', attrs={'id': "videoBrowseNav"}).ul('li')
-    show_list = [(i.a['rel'], i.a.string) for i in items]
-    return show_list
+    soup = BeautifulSoup(make_request(base_url + '/video'))
+    content = soup.find('div', attrs={'class': 'secondary-content'})
+    shows = []
+    shows_tag = content('div', attrs={'id': 'secondaryPlaylist_1'})[0]('div', attrs={'class': 'page topic item'})
+    shows_tag += content('div', attrs={'id': 'secondaryPlaylist_2'})[0]('div', attrs={'class': 'page topic item'})
+    for i in shows_tag:
+        items = i('a')
+        for item in items:
+            shows.append({'name': item.img['alt'], 'thumb': item.img['data-lazy-src'], 'url': item['href']})
+    return shows
 
 
 def display_shows():
-    images = {
-        'Pat and Stu': 'http://www.video.theblaze.com/images/5/4/8/38043548/091713_patandstu_yellow_x720_eh0rogdo.jpg',
-        'Hot Shots': 'http://www.video.theblaze.com/images/8/4/4/64584844/080713_hotshots_x720_i4pihjif.jpg',
-        'Liberty Treehouse': 'http://www.video.theblaze.com/images/2/6/8/63926268/13_2nkbta5v.jpg',
-        '3-Gun Nation': 'http://www.video.theblaze.com/images/5/1/0/43451510/080713_3gunnation_x720_1iawqp50.jpg',
-        'Real News from TheBlaze': 'http://www.video.theblaze.com/images/0/6/8/41178068/13_tavzg7xg.png',
-        'Believe Again Part 2': 'http://www.video.theblaze.com/images/9/1/6/64715916/believe_x720_9xkz40tn.jpg',
-        'Believe Again Part 1': 'http://www.video.theblaze.com/images/6/9/6/64715696/believe_x720_nqyyiu6p.jpg',
-        'American Traditions: Christmas': 'http://www.video.theblaze.com/images/1/2/2/63847122/specialx720_kfvugdkr.jpg',
-        'Glenn Beck Program': 'http://www.video.theblaze.com/images/3/0/0/64658300/13_da47o9g3.jpg',
-        'Wonderful World of Stu': 'http://www.video.theblaze.com/images/6/7/8/59851678/012813_thewonderfulworldofstu_x720_02_ccb2b6vj.jpg',
-        'The Performance: Finale': 'http://www.video.theblaze.com/images/3/0/4/64717304/performance_x720_7ikl9zb1.jpg',
-        'The Performance Part 1': 'http://www.video.theblaze.com/images/3/6/0/64713360/performance_x720_n92mqnxk.jpg',
-        'The Performance Part 2': 'http://www.video.theblaze.com/images/6/9/4/64712694/performance_x720_wwkgbhul.jpg',
-        'Wilkow': 'http://www.video.theblaze.com/images/4/1/4/38034414/090512_wilkow720_qovnla1q.jpg',
-        'Pat & Stu': 'http://www.video.theblaze.com/images/5/4/8/38043548/091713_patandstu_yellow_x720_eh0rogdo.jpg',
-        'Believe Again: The Music': 'http://www.video.theblaze.com/images/1/7/6/64717176/believe_x720_yt52dghv.jpg',
-        'Glenn Beck Radio Program': 'http://www.video.theblaze.com/images/2/0/2/23583202/082713_gbradio_x720_w4f9yovw.jpg',
-        'The B.S. of A.': 'http://www.video.theblaze.com/images/5/0/2/26509502/10000_ineo6xhb_n1uaibkp.jpeg',
-        'Independence USA': 'http://www.video.theblaze.com/images/shows/independence_usa.jpg',
-        'Restoring Love': 'http://www.video.theblaze.com/images/shows/restoring_love.jpg',
-        'Documentaries': 'http://www.video.theblaze.com/images/shows/documentary.jpg',
-        'Specials': 'http://www.video.theblaze.com/images/1/2/2/63847122/specialx720_kfvugdkr.jpg'
-        }
+    # images = {
+        # 'Pat and Stu': 'http://www.video.theblaze.com/images/5/4/8/38043548/091713_patandstu_yellow_x720_eh0rogdo.jpg',
+        # 'Hot Shots': 'http://www.video.theblaze.com/images/8/4/4/64584844/080713_hotshots_x720_i4pihjif.jpg',
+        # 'Liberty Treehouse': 'http://www.video.theblaze.com/images/2/6/8/63926268/13_2nkbta5v.jpg',
+        # '3-Gun Nation': 'http://www.video.theblaze.com/images/5/1/0/43451510/080713_3gunnation_x720_1iawqp50.jpg',
+        # 'Real News from TheBlaze': 'http://www.video.theblaze.com/images/0/6/8/41178068/13_tavzg7xg.png',
+        # 'Believe Again Part 2': 'http://www.video.theblaze.com/images/9/1/6/64715916/believe_x720_9xkz40tn.jpg',
+        # 'Believe Again Part 1': 'http://www.video.theblaze.com/images/6/9/6/64715696/believe_x720_nqyyiu6p.jpg',
+        # 'American Traditions: Christmas': 'http://www.video.theblaze.com/images/1/2/2/63847122/specialx720_kfvugdkr.jpg',
+        # 'Glenn Beck Program': 'http://www.video.theblaze.com/images/3/0/0/64658300/13_da47o9g3.jpg',
+        # 'Wonderful World of Stu': 'http://www.video.theblaze.com/images/6/7/8/59851678/012813_thewonderfulworldofstu_x720_02_ccb2b6vj.jpg',
+        # 'The Performance: Finale': 'http://www.video.theblaze.com/images/3/0/4/64717304/performance_x720_7ikl9zb1.jpg',
+        # 'The Performance Part 1': 'http://www.video.theblaze.com/images/3/6/0/64713360/performance_x720_n92mqnxk.jpg',
+        # 'The Performance Part 2': 'http://www.video.theblaze.com/images/6/9/4/64712694/performance_x720_wwkgbhul.jpg',
+        # 'Wilkow': 'http://www.video.theblaze.com/images/4/1/4/38034414/090512_wilkow720_qovnla1q.jpg',
+        # 'Pat & Stu': 'http://www.video.theblaze.com/images/5/4/8/38043548/091713_patandstu_yellow_x720_eh0rogdo.jpg',
+        # 'Believe Again: The Music': 'http://www.video.theblaze.com/images/1/7/6/64717176/believe_x720_yt52dghv.jpg',
+        # 'Glenn Beck Radio Program': 'http://www.video.theblaze.com/images/2/0/2/23583202/082713_gbradio_x720_w4f9yovw.jpg',
+        # 'The B.S. of A.': 'http://www.video.theblaze.com/images/5/0/2/26509502/10000_ineo6xhb_n1uaibkp.jpeg',
+        # 'Independence USA': 'http://www.video.theblaze.com/images/shows/independence_usa.jpg',
+        # 'Restoring Love': 'http://www.video.theblaze.com/images/shows/restoring_love.jpg',
+        # 'Documentaries': 'http://www.video.theblaze.com/images/shows/documentary.jpg',
+        # 'Specials': 'http://www.video.theblaze.com/images/1/2/2/63847122/specialx720_kfvugdkr.jpg'
+        # }
     if addon.getSetting('prem_content') == 'true':
         add_dir('Live Shows', 'live_shows', icon, 'get_live_shows')
     data = cache.cacheFunction(cache_shows)
     for i in data:
-        try:
-            thumb = images[i[1]]
-        except:
-            thumb = icon
-        add_dir(i[1], i[0], thumb, 'get_show')
+        add_dir(i['name'], i['url'], i['thumb'], 'get_show')
 
 
-def display_show(show_id):
-    xml_url = base_url + '/gen/multimedia/topic/%s.xml' %show_id
-    soup = BeautifulStoneSoup(make_request(xml_url),
-                              convertEntities=BeautifulStoneSoup.XML_ENTITIES)
-    json_url = base_url + '/ws/search/merge?' + soup.search_query.string
-    episodes = []
-    highlights = []
-    data = json.loads(make_request(json_url))
+def display_show(show_url):
+    current_show = show_url.split('=')[1]
+    q1_hits = ['80', '0']
+    q2_hits = ['0', '160']
+    search_data = {
+            "result_format": "json",
+            "sort": "desc",
+            "sort_type" : "date",
+            "q1_query": current_show,
+            "q1_gbtax_key": current_show,
+            "q1_hitsPerPage": q1_hits[0],
+            "q1_op" : "AND",
+            "q1_gbtax" : "highlight",
+            "q2_query": current_show,
+            "q2_gbtax_key": current_show,
+            "q2_event_category" : "show",
+            "q2_hitsPerPage" : q2_hits[0],
+            "bypass" : "y",
+            "ns" : 43,
+            "q2_op" : "AND" 
+        }
+    highlights_url = base_url + '/ws/search/merge?' + urllib.urlencode(search_data)
+    search_data['q1_hitsPerPage'] = q1_hits[1]
+    search_data['q2_hitsPerPage'] = q2_hits[1]
+    episodes_url = base_url + '/ws/search/merge?' + urllib.urlencode(search_data)
+    highlights = parse_video_search(highlights_url)
+    episodes = parse_video_search(episodes_url)
+    
+    if addon.getSetting('prem_content') == 'false':
+        if len(highlights) > 0:
+            for i in highlights:
+                add_dir(i[0]['title'], i[1], i[2], 'resolve_url', i[0])
+        else:
+            notify('Sorry, this show only has premium content.')
+    elif addon.getSetting('hide_highlights') == 'true':
+        for i in episodes:
+            add_dir(i[0]['title'], i[1], i[2], 'resolve_episode_url', i[0], i[3])
+    else:
+        cache.set('highlights_dict', repr({'highlights': highlights}))
+        cache.set('episodes_dict', repr({'episodes': episodes}))
+        add_dir('Highlights', 'get_cached_highlights', icon, 'get_show_list')
+        add_dir('Episodes', 'get_cached_episodes', icon, 'get_show_list')
+
+    
+def parse_video_search(search_url):
+    data = json.loads(make_request(search_url))
+    videos = []
     for i in data['mediaContent']:
         info = {}
         item_ids = {}
@@ -149,24 +188,8 @@ def display_show(show_id):
                 if event['type'] == 'calendar_event_id':
                     item_ids['event'] = event['keyword']
                     break
-            episodes.append((info, xml_url, thumb, item_ids))
-        else:
-            highlights.append((info, xml_url, thumb))
-    if addon.getSetting('prem_content') == 'false':
-        if len(highlights) > 0:
-            for i in highlights:
-                add_dir(i[0]['title'], i[1], i[2], 'resolve_url', i[0])
-        else:
-            notify('Sorry, this show only has premium content.')
-    elif addon.getSetting('hide_highlights') == 'true':
-        for i in episodes:
-            add_dir(i[0]['title'], i[1], i[2], 'resolve_episode_url', i[0], i[3])
-    else:
-        cache.set('highlights_dict', repr({'highlights': highlights}))
-        cache.set('episodes_dict', repr({'episodes': episodes}))
-        add_dir('Highlights', 'get_cached_highlights', icon, 'get_show_list')
-        add_dir('Episodes', 'get_cached_episodes', icon, 'get_show_list')
-
+        videos.append((info, xml_url, thumb, item_ids))
+    return videos
 
 def display_show_list(name):
     if 'highlights' in name:
