@@ -133,38 +133,40 @@ def display_show(show_url):
     else:
         cache.set('highlights_dict', repr({'highlights': highlights}))
         cache.set('episodes_dict', repr({'episodes': episodes}))
-        add_dir('Highlights', 'get_cached_highlights', icon, 'get_show_list')
         add_dir('Episodes', 'get_cached_episodes', icon, 'get_show_list')
+        if len(highlights) > 0:
+            add_dir('Highlights', 'get_cached_highlights', icon, 'get_show_list')
 
     
 def parse_video_search(search_url):
     data = json.loads(make_request(search_url))
     videos = []
-    for i in data['mediaContent']:
-        info = {}
-        item_ids = {}
-        thumb = None
-        xml_url = i['url']
-        for t in i['thumbnails']:
-            if t['type'] == '1000' or t['type'] == '13':
-                thumb = t['src']
-                break
-        if thumb is None:
-            thumb = i['thumbnails'][0]['src']
-        if not thumb.startswith('http'):
-            thumb = base_url + thumb
-        info['title'] = i['blurb']
-        if i.has_key('bigBlurb') and i['bigBlurb']:
-            info['plot'] = i['bigBlurb']
-        if i.has_key('duration') and i['duration']:
-            info['duration'] = get_length_in_minutes(i['duration'])
-        if i.has_key('featureContext'):
-            item_ids['content'] = i['contentId']
-            for event in i['keywords']:
-                if event['type'] == 'calendar_event_id':
-                    item_ids['event'] = event['keyword']
+    if data.has_key('mediaContent'):
+        for i in data['mediaContent']:
+            info = {}
+            item_ids = {}
+            thumb = None
+            xml_url = i['url']
+            for t in i['thumbnails']:
+                if t['type'] == '1000' or t['type'] == '13':
+                    thumb = t['src']
                     break
-        videos.append((info, xml_url, thumb, item_ids))
+            if thumb is None:
+                thumb = i['thumbnails'][0]['src']
+            if not thumb.startswith('http'):
+                thumb = base_url + thumb
+            info['title'] = i['blurb']
+            if i.has_key('bigBlurb') and i['bigBlurb']:
+                info['plot'] = i['bigBlurb']
+            if i.has_key('duration') and i['duration']:
+                info['duration'] = get_length_in_minutes(i['duration'])
+            if i.has_key('featureContext'):
+                item_ids['content'] = i['contentId']
+                for event in i['keywords']:
+                    if event['type'] == 'calendar_event_id':
+                        item_ids['event'] = event['keyword']
+                        break
+            videos.append((info, xml_url, thumb, item_ids))
     return videos
 
 def display_show_list(name):
