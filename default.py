@@ -28,7 +28,7 @@ cache = StorageServer.StorageServer("theblaze", 24)
 base_url = 'http://www.video.theblaze.com'
 cookie_file = os.path.join(addon_profile, 'cookie_file')
 cookie_jar = cookielib.LWPCookieJar(cookie_file)
-debug = addon.getSetting('debug')
+language = addon.getLocalizedString
 
 
 def addon_log(string):
@@ -36,7 +36,7 @@ def addon_log(string):
         log_message = string.encode('utf-8', 'ignore')
     except:
         log_message = 'addonException: addon_log: %s' %format_exc()
-    xbmc.log("[%s-%s]: %s" %(addon_id, addon_version, log_message), level=xbmc.LOGNOTICE)
+    xbmc.log("[%s-%s]: %s" %(addon_id, addon_version, log_message), level=xbmc.LOGDEBUG)
 
 
 def make_request(url, data=None, headers=None):
@@ -87,7 +87,7 @@ def cache_shows():
 
 def display_shows():
     if addon.getSetting('prem_content') == 'true':
-        add_dir('Live Shows', 'live_shows', icon, 'get_live_shows')
+        add_dir(language(30013), 'live_shows', icon, 'get_live_shows')
     data = cache.cacheFunction(cache_shows)
     for i in data:
         add_dir(i['name'], i['url'], i['thumb'], 'get_show')
@@ -126,16 +126,16 @@ def display_show(show_url):
             for i in highlights:
                 add_dir(i[0]['title'], i[1], i[2], 'resolve_url', i[0])
         else:
-            notify('Sorry, this show only has premium content.')
+            notify(language(30016))
     elif addon.getSetting('hide_highlights') == 'true':
         for i in episodes:
             add_dir(i[0]['title'], i[1], i[2], 'resolve_episode_url', i[0], i[3])
     else:
         cache.set('highlights_dict', repr({'highlights': highlights}))
         cache.set('episodes_dict', repr({'episodes': episodes}))
-        add_dir('Episodes', 'get_cached_episodes', icon, 'get_show_list')
+        add_dir(language(30014), 'get_cached_episodes', icon, 'get_show_list')
         if len(highlights) > 0:
-            add_dir('Highlights', 'get_cached_highlights', icon, 'get_show_list')
+            add_dir(language(30015), 'get_cached_highlights', icon, 'get_show_list')
 
     
 def parse_video_search(search_url):
@@ -334,7 +334,7 @@ def do_login():
                 addon_log(format_exc())
                 pass
             addon_log('Login Failed')
-            notify('Login Failed')
+            notify(language(30017))
         if cookies.has_key('ipid') and cookies.has_key('fprt'):
             return cookies
         else:
@@ -414,7 +414,7 @@ def resolve_prem_url(ids_dict, retry=False):
                     raise
             except:
                 addon_log(format_exc())
-                notify('Unknown Error - Check Log')
+                notify(language(30018))
                 return
     try:
         event_id = soup('event-id')[0].string
