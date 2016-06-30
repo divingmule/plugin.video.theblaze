@@ -151,9 +151,9 @@ def parse_video_search(search_url):
                 if t['type'] == '1000' or t['type'] == '13':
                     thumb = t['src']
                     break
-            if thumb is None:
+            if thumb is None and i['thumbnails']:
                 thumb = i['thumbnails'][0]['src']
-            if not thumb.startswith('http'):
+            if thumb and not thumb.startswith('http'):
                 thumb = base_url + thumb
             info['title'] = i['blurb']
             if i.has_key('bigBlurb') and i['bigBlurb']:
@@ -168,6 +168,7 @@ def parse_video_search(search_url):
                         break
             videos.append((info, xml_url, thumb, item_ids))
     return videos
+    
 
 def display_show_list(name):
     if 'highlights' in name:
