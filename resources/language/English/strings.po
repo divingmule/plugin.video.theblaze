@@ -1,0 +1,110 @@
+# XBMC Media Center language file
+msgid ""
+msgstr ""
+"Project-Id-Version: XBMC-Addons\n"
+"Report-Msgid-Bugs-To: alanwww1@xbmc.org\n"
+"POT-Creation-Date: 2016-06-30 13:47+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: en\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+
+msgctxt "#30001"
+msgid "640x360 1200K"
+msgstr ""
+
+msgctxt "#30002"
+msgid "400x224 600K"
+msgstr ""
+
+msgctxt "#30003"
+msgid "HLS(m3u8) - Moble"
+msgstr ""
+
+msgctxt "#30004"
+msgid "HLS(m3u8)- Tablet"
+msgstr ""
+
+msgctxt "#30005"
+msgid "HLS(m3u8)- High"
+msgstr ""
+
+msgctxt "#30006"
+msgid "940x560 2400K"
+msgstr ""
+
+msgctxt "#30007"
+msgid "800x448 1800K"
+msgstr ""
+
+msgctxt "#30008"
+msgid "800x448 1200K"
+msgstr ""
+
+msgctxt "#30009"
+msgid "400x448 800K"
+msgstr ""
+
+msgctxt "#30010"
+msgid "400x224 500K"
+msgstr ""
+
+#empty string with id 30011
+
+msgctxt "#30012"
+msgid "HLS(m3u8) 720p"
+msgstr ""
+
+msgctxt "#30013"
+msgid "Live Shows"
+msgstr ""
+
+msgctxt "#30014"
+msgid "Episodes"
+msgstr ""
+
+msgctxt "#30015"
+msgid "Highlights"
+msgstr ""
+
+msgctxt "#30016"
+msgid "Sorry, this show only has premium content."
+msgstr ""
+
+msgctxt "#30017"
+msgid "Login Failed"
+msgstr ""
+
+msgctxt "#30018"
+msgid "Unknown Error - Check Log"
+msgstr ""
+
+msgctxt "#30019"
+msgid "Highlights Quality"
+msgstr ""
+
+#empty string with id 30020
+
+msgctxt "#30021"
+msgid "Enable Subscription Content"
+msgstr ""
+
+msgctxt "#30022"
+msgid "Email Address"
+msgstr ""
+
+msgctxt "#30023"
+msgid "Password"
+msgstr ""
+
+msgctxt "#30024"
+msgid "Subscription Playback Quality"
+msgstr ""
+
+msgctxt "#30025"
+msgid "Only Show Episodes"
+msgstr ""
